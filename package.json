@@ -1,0 +1,17 @@
+{
+  "name": "life_manager_server",
+  "version": "1.0.0",
+  "description": "Server for React Native app",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "life",
+    "manager",
+    "node",
+    "server"
+  ],
+  "author": "cam2332",
+  "license": "ISC"
+}
