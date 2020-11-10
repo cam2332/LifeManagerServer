@@ -1,0 +1,20 @@
+import { model, Model } from 'mongoose';
+import { TokenSchema } from '../schemas/TokenSchema';
+import { TokenDocument } from '../documents/TokenDocument';
+
+export interface TokenModel extends Model<TokenDocument> {
+  createToken(token: TokenDocument): Promise<TokenDocument>;
+  getByValue(tokenValue: string): Promise<TokenDocument>;
+  removeTokens(
+    userId: string,
+  ): Promise<{
+    ok?: number | undefined;
+    n?: number | undefined;
+    deletedCount?: number | undefined;
+  }>;
+}
+
+export const Token: TokenModel = model<TokenDocument, TokenModel>(
+  'tokens',
+  TokenSchema,
+);
