@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from 'express';
 import * as UserManager from '../business/UserManager';
 import ApplicationError from '../service/ApplicationError';
 import * as MongoConverter from '../service/MongoConverter';
+import * as Auth from '../middleware/Auth';
 
 const userController: Router = express.Router();
 
@@ -32,6 +33,7 @@ userController.post(
 
 userController.delete(
   '/logout',
+  Auth.auth,
   async (request: Request, response: Response) => {
     try {
       const result = await UserManager.logout(request.body.userId);
