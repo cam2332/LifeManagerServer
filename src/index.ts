@@ -2,29 +2,36 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
+import routes from './REST/Routes';
 
 const app = express();
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-mongoose.connect(config.databaseUrl, {
+mongoose.connect(
+  config.databaseUrl,
+  {
     useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}, (error) => {
+  },
+  (error) => {
     if (error) {
-        console.error(error)
+      console.error(error);
     } else {
-        console.info('MongoDB connected')
+      console.info('MongoDB connected');
     }
-})
+  },
+);
 
 process.on('SIGINT', () => {
-    mongoose.connection.close(() => {
-        console.error('Mongoose default connection closed through app termination')
-        process.exit(0)
-    })
-})
+  mongoose.connection.close(() => {
+    console.error('Mongoose default connection closed through app termination');
+    process.exit(0);
+  });
+});
+
+app.use('/api/v1', routes);
 
 app.listen(config.port, () => {
-    console.log('Server is running at port', config.port)
-})
+  console.log('Server is running at port', config.port);
+});
