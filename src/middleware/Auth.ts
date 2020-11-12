@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import ApplicationError from '../service/ApplicationError';
 import jwt from 'jsonwebtoken';
 import config from '../config';
-import { UserDocument } from '../DAO/documents/UserDocument';
+import * as TokenManager from '../business/TokenManager';
 
 export const auth = (
   request: Request,
@@ -29,8 +29,16 @@ export const auth = (
 
     try {
       const payload = jwt.verify(token, config.JwtSecret);
-      /** Put userId from token payload in request for controllers */
-      request.userId = (payload as UserDocument).id;
+      /** Put userId and deviceName from token payload in request for controllers */
+      console.log(payload);
+      const userId = TokenManager.getUserIdFromPayload(
+        payload as Record<string, unknown>,
+      );
+      const deviceName = TokenManager.getDeviceNameFromPayload(
+        payload as Record<string, unknown>,
+      );
+      request.userId = userId;
+      request.deviceName = deviceName;
       next();
     } catch (error) {
       throw new ApplicationError(

@@ -54,6 +54,16 @@ export const register = async (
   return createdUser;
 };
 
-export const logout = async (userId: string): Promise<boolean> => {
-  return await TokenManager.remove(userId);
+export const logout = async (
+  userId: string,
+  deviceName: string,
+): Promise<boolean> => {
+  const success = await TokenManager.remove(userId, deviceName);
+  if (!success) {
+    throw new ApplicationError(
+      'Logout failed',
+      ApplicationError.NOT_FOUND.code,
+    );
+  }
+  return success;
 };

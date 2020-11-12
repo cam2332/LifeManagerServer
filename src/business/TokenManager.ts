@@ -13,7 +13,9 @@ export const create = async (
   const userData = MongoConverter.fromUser(user);
   let token: string;
   try {
-    token = jwt.sign(userData, config.JwtSecret, { expiresIn: '24h' });
+    token = jwt.sign({ user: userData, deviceName }, config.JwtSecret, {
+      expiresIn: '24h',
+    });
   } catch (error) {
     throw new ApplicationError(
       'Failed to sign token',
@@ -37,11 +39,26 @@ export const create = async (
   );
 };
 
-export const remove = async (userId: string): Promise<boolean> => {
-  const result = await Token.removeTokens(userId);
+export const remove = async (
+  userId: string,
+  deviceName: string,
+): Promise<boolean> => {
+  const result = await Token.removeTokens(userId, deviceName);
   if (result.n && result.ok && result.deletedCount === 1) {
     return true;
   } else {
     return false;
   }
+};
+
+export const getUserIdFromPayload = (
+  payload: string | Record<string, unknown>,
+): string => {
+  return ((payload as any).user as UserDocument).id;
+};
+
+export const getDeviceNameFromPayload = (
+  payload: string | Record<string, unknown>,
+): string => {
+  return (payload as any).deviceName;
 };

@@ -35,6 +35,6 @@ TokenSchema.statics.removeTokens = async (
   deletedCount?: number | undefined;
 }> => {
   return await Token.deleteMany({
-    $and: [{ userId: Types.ObjectId(userId) }, { deviceId: deviceName }],
+    $and: [{ userId: Types.ObjectId(userId) }, { deviceName: deviceName }],
   });
 };

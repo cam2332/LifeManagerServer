@@ -7,6 +7,7 @@ export interface TokenModel extends Model<TokenDocument> {
   getByValue(tokenValue: string): Promise<TokenDocument>;
   removeTokens(
     userId: string,
+    deviceName: string,
   ): Promise<{
     ok?: number | undefined;
     n?: number | undefined;
