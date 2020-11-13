@@ -30,7 +30,6 @@ export const auth = (
     try {
       const payload = jwt.verify(token, config.JwtSecret);
       /** Put userId and deviceName from token payload in request for controllers */
-      console.log(payload);
       const userId = TokenManager.getUserIdFromPayload(
         payload as Record<string, unknown>,
       );
