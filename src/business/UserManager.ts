@@ -42,12 +42,26 @@ export const register = async (
 ): Promise<UserDocument> => {
   const user = await User.getByEmailAndLogin(userData.email, userData.login);
   if (user) {
-    throw new ApplicationError(
-      'User with that email or login already exist',
-      ApplicationError.CONFLICT.code,
-    );
+    if (user.email === userData.email && user.login === userData.login) {
+      throw new ApplicationError(
+        'User with that email and login already exist',
+        ApplicationError.CONFLICT.code,
+      );
+    } else if (user.email === userData.email) {
+      throw new ApplicationError(
+        'User with that email already exist',
+        ApplicationError.CONFLICT.code,
+        'email',
+      );
+    } else if (user.login === userData.login) {
+      throw new ApplicationError(
+        'User with that login already exist',
+        ApplicationError.CONFLICT.code,
+        'login',
+      );
+    }
   }
-  const { hashedPassword, salt } = await hashPassword(userData.password);
+  const { hashedPassword, salt } = hashPassword(userData.password);
   userData.password = hashedPassword;
   userData.salt = salt;
   const createdUser = await User.createUser(userData);
