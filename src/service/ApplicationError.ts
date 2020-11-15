@@ -20,17 +20,21 @@ export default class ApplicationError extends Error {
   public static CONFLICT = { message: 'CONFLICT', code: 409 };
 
   public code: number;
+  public additionalInfo: string;
 
-  constructor(message: string, code: number) {
+  constructor(message: string, code: number, additionalInfo = '') {
     super(message);
     this.name = 'ApplicationError';
     this.code = code;
+    this.additionalInfo = additionalInfo;
   }
 
   public static errorHandler(
     error: ApplicationError,
     response: Response,
   ): void {
-    response.status(error.code).send({ message: error.message });
+    response
+      .status(error.code)
+      .send({ message: error.message, additionalInfo: error.additionalInfo });
   }
 }
