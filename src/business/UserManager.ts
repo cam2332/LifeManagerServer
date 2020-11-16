@@ -34,6 +34,7 @@ export const authenticate = async (
   throw new ApplicationError(
     'Invalid password',
     ApplicationError.UNAUTHORIZED.code,
+    'password',
   );
 };
 
