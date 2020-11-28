@@ -26,6 +26,7 @@ export const toNote = (
   userId: string,
   createDate: Date = new Date(),
   lastEditDate: Date = new Date(),
+  color = '',
 ): NoteDocument => {
   return {
     title: title,
@@ -33,6 +34,7 @@ export const toNote = (
     createDate: createDate,
     lastEditDate: lastEditDate,
     userId: Types.ObjectId(userId),
+    color: color,
   } as NoteDocument;
 };
 
@@ -44,6 +46,7 @@ export const fromNote = (
   text: string;
   createDate: Date;
   lastEditDate: Date;
+  color: string;
 } => {
   return {
     id: note.id,
@@ -51,6 +54,7 @@ export const fromNote = (
     text: note.text,
     createDate: note.createDate,
     lastEditDate: note.lastEditDate,
+    color: note.color,
   };
 };
 
@@ -62,6 +66,7 @@ export const fromNoteArray = (
   text: string;
   createDate: Date;
   lastEditDate: Date;
+  color: string;
 }[] => {
   return noteArray.map((note) => fromNote(note));
 };
