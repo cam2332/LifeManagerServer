@@ -109,4 +109,20 @@ noteController.patch(
   },
 );
 
+/**
+ * Update note color
+ */
+noteController.patch(
+  '/:id/color/:color',
+  Auth.auth,
+  async (request: Request, response: Response) => {
+    try {
+      await NoteManager.updateColor(request.params.id, request.params.color);
+      response.sendStatus(204);
+    } catch (error) {
+      ApplicationError.errorHandler(error, response);
+    }
+  },
+);
+
 export default noteController;

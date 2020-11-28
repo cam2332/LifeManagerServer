@@ -12,6 +12,7 @@ export interface NoteModel extends Model<NoteDocument> {
   ): Promise<NoteDocument[]>;
   updateTitle(id: string, title: string): Promise<NoteDocument | null>;
   updateText(id: string, text: string): Promise<NoteDocument | null>;
+  updateColor(id: string, color: string): Promise<NoteDocument | null>;
 }
 
 export const Note: NoteModel = model<NoteDocument, NoteModel>(

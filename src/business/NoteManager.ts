@@ -80,3 +80,17 @@ export const updateText = async (
   }
   return true;
 };
+
+export const updateColor = async (
+  noteId: string,
+  color: string,
+): Promise<boolean> => {
+  const updatedNote = await Note.updateColor(noteId, color);
+  if (!updatedNote) {
+    throw new ApplicationError(
+      'Note not found',
+      ApplicationError.NOT_FOUND.code,
+    );
+  }
+  return true;
+};

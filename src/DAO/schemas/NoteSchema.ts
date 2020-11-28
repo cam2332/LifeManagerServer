@@ -8,6 +8,7 @@ export const NoteSchema: Schema = new Schema(
     text: String,
     createDate: Date,
     lastEditDate: Date,
+    color: String,
     userId: { type: Types.ObjectId, ref: 'users', required: true },
   },
   { versionKey: false, collection: 'notes' },
@@ -46,20 +47,46 @@ NoteSchema.statics.updateTitle = async (
   id: string,
   title: string,
 ): Promise<NoteDocument | null> => {
-  const updatedNote = await Note.findByIdAndUpdate(id, {
-    title: title,
-    lastEditDate: new Date(),
-  });
-  return updatedNote;
+  try {
+    const updatedNote = await Note.findByIdAndUpdate(id, {
+      title: title,
+      lastEditDate: new Date(),
+    });
+    return updatedNote;
+  } catch (error) {
+    console.error('error updating title');
+    return null;
+  }
 };
 
 NoteSchema.statics.updateText = async (
   id: string,
   text: string,
 ): Promise<NoteDocument | null> => {
-  const updatedNote = await Note.findByIdAndUpdate(id, {
-    text: text,
-    lastEditDate: new Date(),
-  });
-  return updatedNote;
+  try {
+    const updatedNote = await Note.findByIdAndUpdate(id, {
+      text: text,
+      lastEditDate: new Date(),
+    });
+    return updatedNote;
+  } catch (error) {
+    console.error('error updating text');
+    return null;
+  }
+};
+
+NoteSchema.statics.updateColor = async (
+  id: string,
+  color: string,
+): Promise<NoteDocument | null> => {
+  try {
+    const updatedNote = await Note.findByIdAndUpdate(id, {
+      color: color,
+      lastEditDate: new Date(),
+    });
+    return updatedNote;
+  } catch (error) {
+    console.error('error updating color');
+    return null;
+  }
 };
