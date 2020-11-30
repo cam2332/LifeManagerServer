@@ -4,7 +4,7 @@ import { Note } from '../models/NoteModel';
 
 export const NoteSchema: Schema = new Schema(
   {
-    title: { type: String, required: true },
+    title: String,
     text: String,
     createDate: Date,
     lastEditDate: Date,

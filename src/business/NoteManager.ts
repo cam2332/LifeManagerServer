@@ -6,9 +6,10 @@ import * as MongoConverter from '../service/MongoConverter';
 export const create = async (
   title: string,
   text: string,
+  color: string,
   userId: string,
 ): Promise<NoteDocument> => {
-  const noteData = MongoConverter.toNote(title, text, userId);
+  const noteData = MongoConverter.toNote(title, text, userId, color);
   const createdNote = await Note.createNote(noteData);
   return createdNote;
 };

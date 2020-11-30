@@ -24,9 +24,9 @@ export const toNote = (
   title: string,
   text: string,
   userId: string,
+  color = '',
   createDate: Date = new Date(),
   lastEditDate: Date = new Date(),
-  color = '',
 ): NoteDocument => {
   return {
     title: title,

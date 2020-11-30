@@ -17,6 +17,7 @@ noteController.post(
       const result = await NoteManager.create(
         request.body.title,
         request.body.text,
+        request.body.color,
         request.userId,
       );
       response.status(201).send(MongoConverter.fromNote(result));
