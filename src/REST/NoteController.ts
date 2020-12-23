@@ -98,11 +98,11 @@ noteController.patch(
  * Update note text
  */
 noteController.patch(
-  '/:id/text/',
+  '/:id/text/:text',
   Auth.auth,
   async (request: Request, response: Response) => {
     try {
-      await NoteManager.updateText(request.params.id, request.body.text);
+      await NoteManager.updateText(request.params.id, request.params.text);
       response.sendStatus(204);
     } catch (error) {
       ApplicationError.errorHandler(error, response);
