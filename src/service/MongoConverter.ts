@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { UserDocument } from '../DAO/documents/UserDocument';
 import { NoteDocument } from '../DAO/documents/NoteDocument';
+import { TaskDocument } from '../DAO/documents/TaskDocument';
 
 export const fromUser = (
   user: UserDocument,
@@ -69,4 +70,70 @@ export const fromNoteArray = (
   color: string;
 }[] => {
   return noteArray.map((note) => fromNote(note));
+};
+
+export const toTask = (
+  title: string,
+  startDate: Date | undefined,
+  endDate: Date | undefined,
+  categoryId: string,
+  userId: string,
+  note = '',
+  favorite = false,
+  done = false,
+  lastEditDate = new Date(),
+): TaskDocument => {
+  return {
+    title,
+    startDate,
+    endDate,
+    categoryId: Types.ObjectId(categoryId),
+    favorite,
+    done,
+    note,
+    lastEditDate,
+    userId: Types.ObjectId(userId),
+  } as TaskDocument;
+};
+
+export const fromTask = (
+  task: TaskDocument,
+): {
+  id: string;
+  title: string;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  categoryId: string | undefined;
+  favorite: boolean;
+  done: boolean;
+  note: string;
+  lastEditDate: Date | undefined;
+} => {
+  return {
+    id: task.id,
+    title: task.title,
+    startDate: task.startDate,
+    endDate: task.endDate,
+    categoryId: task.categoryId?.toHexString(),
+    favorite: task.favorite,
+    done: task.done,
+    note: task.note,
+    lastEditDate: task.lastEditDate,
+  };
+};
+
+export const fromTaskArray = (
+  taskArray: TaskDocument[],
+): {
+  id: string;
+  title: string;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  categoryId: string | undefined;
+  favorite: boolean;
+  done: boolean;
+  note: string;
+  lastEditDate: Date | undefined;
+}[] => {
+  return taskArray.map((task) => fromTask(task));
 };
