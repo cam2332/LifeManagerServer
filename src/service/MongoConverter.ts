@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 import { UserDocument } from '../DAO/documents/UserDocument';
 import { NoteDocument } from '../DAO/documents/NoteDocument';
 import { TaskDocument } from '../DAO/documents/TaskDocument';
+import { CategoryDocument } from '../DAO/documents/CategoryDocument';
 
 export const fromUser = (
   user: UserDocument,
@@ -136,4 +137,45 @@ export const fromTaskArray = (
   lastEditDate: Date | undefined;
 }[] => {
   return taskArray.map((task) => fromTask(task));
+};
+
+export const toCategory = (
+  text: string,
+  userId: string,
+  color = '',
+  icon = '',
+): CategoryDocument => {
+  return {
+    text,
+    userId: Types.ObjectId(userId),
+    color,
+    icon,
+  } as CategoryDocument;
+};
+
+export const fromCategory = (
+  category: CategoryDocument,
+): {
+  id: string;
+  text: string;
+  color?: string;
+  icon?: string;
+} => {
+  return {
+    id: category.id,
+    text: category.text,
+    color: category.color,
+    icon: category.icon,
+  };
+};
+
+export const fromCategoryArray = (
+  categories: CategoryDocument[],
+): {
+  id: string;
+  text: string;
+  color?: string;
+  icon?: string;
+}[] => {
+  return categories.map((category) => fromCategory(category));
 };
