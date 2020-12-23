@@ -2,6 +2,7 @@ import express, { Router, Request, Response, NextFunction } from 'express';
 import UserController from './UserController';
 import NoteController from './NoteController';
 import TaskController from './TaskController';
+import CategoryController from './CategoryController';
 
 const routes: Router = express.Router();
 routes.use(
@@ -21,6 +22,13 @@ routes.use(
   '/task',
   async (request: Request, response: Response, next: NextFunction) => {
     TaskController(request, response, next);
+  },
+);
+
+routes.use(
+  '/category',
+  async (request: Request, response: Response, next: NextFunction) => {
+    CategoryController(request, response, next);
   },
 );
 
