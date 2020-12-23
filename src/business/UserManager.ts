@@ -3,6 +3,7 @@ import * as TokenManager from './TokenManager';
 import * as HashService from '../service/HashService';
 import { UserDocument } from '../DAO/documents/UserDocument';
 import ApplicationError from '../service/ApplicationError';
+import * as MongoConverter from '../service/MongoConverter';
 
 const hashPassword = (
   password: string,
@@ -15,7 +16,16 @@ export const authenticate = async (
   login: string,
   password: string,
   deviceName: string,
-): Promise<string> => {
+): Promise<{
+  token: string;
+  user: {
+    id: string;
+    login: string;
+    email: string;
+    displayName?: string;
+    profileImageUrl?: string;
+  };
+}> => {
   const user = await User.getByEmailOrLogin(login);
   if (!user) {
     throw new ApplicationError(
@@ -26,7 +36,8 @@ export const authenticate = async (
   if (HashService.compare(password, user.password, user.salt)) {
     try {
       const token = await TokenManager.create(user, deviceName);
-      return token;
+      const userData = MongoConverter.fromUser(user);
+      return { token, user: userData };
     } catch (error) {
       throw error;
     }

@@ -13,7 +13,7 @@ userController.post('/login', async (request: Request, response: Response) => {
       request.body.password,
       request.body.deviceName,
     );
-    response.status(200).send({ token: result });
+    response.status(200).send({ token: result.token, user: result.user });
   } catch (error) {
     ApplicationError.errorHandler(error, response);
   }
