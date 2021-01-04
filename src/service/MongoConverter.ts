@@ -23,6 +23,7 @@ export const fromUser = (
 };
 
 export const toNote = (
+  id: string | undefined,
   title: string,
   text: string,
   userId: string,
@@ -31,13 +32,31 @@ export const toNote = (
   lastEditDate: Date = new Date(),
 ): NoteDocument => {
   return {
+    ...(id && { _id: Types.ObjectId(id) }),
     title: title,
     text: text,
-    createDate: createDate,
-    lastEditDate: lastEditDate,
+    createDate: new Date(createDate),
+    lastEditDate: new Date(lastEditDate),
     userId: Types.ObjectId(userId),
     color: color,
   } as NoteDocument;
+};
+
+export const toNoteArray = (
+  noteArray: Array<any>,
+  userId: string,
+): NoteDocument[] => {
+  return noteArray.map((note) =>
+    toNote(
+      note.id,
+      note.title,
+      note.text,
+      userId,
+      note.color,
+      note.createDate,
+      note.lastEditDate,
+    ),
+  );
 };
 
 export const fromNote = (
@@ -74,10 +93,11 @@ export const fromNoteArray = (
 };
 
 export const toTask = (
+  id: string | undefined,
   title: string,
   startDate: Date | undefined,
   endDate: Date | undefined,
-  categoryId: string,
+  categoryId: string | undefined,
   userId: string,
   note = '',
   favorite = false,
@@ -85,16 +105,37 @@ export const toTask = (
   lastEditDate = new Date(),
 ): TaskDocument => {
   return {
+    ...(id && { _id: Types.ObjectId(id) }),
     title,
     startDate,
     endDate,
-    categoryId: Types.ObjectId(categoryId),
+    ...(categoryId && { categoryId: Types.ObjectId(categoryId) }),
     favorite,
     done,
     note,
-    lastEditDate,
+    lastEditDate: new Date(lastEditDate),
     userId: Types.ObjectId(userId),
   } as TaskDocument;
+};
+
+export const toTaskArray = (
+  taskArray: Array<any>,
+  userId: string,
+): TaskDocument[] => {
+  return taskArray.map((task) =>
+    toTask(
+      task.id,
+      task.title,
+      task.startDate,
+      task.endDate,
+      task.categoryId,
+      userId,
+      task.note,
+      task.favorite,
+      task.done,
+      task.lastEditDate,
+    ),
+  );
 };
 
 export const fromTask = (
@@ -108,7 +149,7 @@ export const fromTask = (
   favorite: boolean;
   done: boolean;
   note: string;
-  lastEditDate: Date | undefined;
+  lastEditDate: Date;
 } => {
   return {
     id: task.id,
@@ -134,23 +175,40 @@ export const fromTaskArray = (
   favorite: boolean;
   done: boolean;
   note: string;
-  lastEditDate: Date | undefined;
+  lastEditDate: Date;
 }[] => {
   return taskArray.map((task) => fromTask(task));
 };
 
 export const toCategory = (
+  id: string | undefined,
   text: string,
   userId: string,
   color = '',
   icon = '',
 ): CategoryDocument => {
   return {
+    ...(id && { _id: Types.ObjectId(id) }),
     text,
     userId: Types.ObjectId(userId),
     color,
     icon,
   } as CategoryDocument;
+};
+
+export const toCategoryArray = (
+  categoryArray: Array<any>,
+  userId: string,
+): CategoryDocument[] => {
+  return categoryArray.map((category) =>
+    toCategory(
+      category.id,
+      category.text,
+      userId,
+      category.color,
+      category.icon,
+    ),
+  );
 };
 
 export const fromCategory = (
