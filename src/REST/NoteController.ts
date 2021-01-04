@@ -78,6 +78,27 @@ noteController.delete(
   },
 );
 
+noteController.delete(
+  '/',
+  Auth.auth,
+  async (request: Request, response: Response) => {
+    try {
+      if (Array.isArray(request.query.ids)) {
+        const ids: string[] = request.query.ids as string[];
+        await NoteManager.deleteByIds(ids);
+        response.sendStatus(204);
+      } else {
+        throw new ApplicationError(
+          'Invalid request query parameter',
+          ApplicationError.BAD_REQUEST.code,
+        );
+      }
+    } catch (error) {
+      ApplicationError.errorHandler(error, response);
+    }
+  },
+);
+
 /**
  * Update note title
  */

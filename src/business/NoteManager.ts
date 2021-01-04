@@ -54,6 +54,17 @@ export const deleteById = async (noteId: string): Promise<boolean> => {
   return true;
 };
 
+export const deleteByIds = async (notesIds: string[]): Promise<boolean> => {
+  const deletedNotes = Note.deleteMany({ _id: { $in: notesIds } });
+  if ((await deletedNotes).deletedCount !== notesIds.length) {
+    throw new ApplicationError(
+      'Notes not found',
+      ApplicationError.NOT_FOUND.code,
+    );
+  }
+  return true;
+};
+
 export const updateTitle = async (
   noteId: string,
   title: string,
