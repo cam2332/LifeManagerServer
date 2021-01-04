@@ -23,9 +23,21 @@ syncController.post('/', auth, async (request: Request, response: Response) => {
       request.body.categories,
       request.userId,
     );
-    response
-      .status(200)
-      .send(SyncManager.sync(notes, tasks, categories, request.userId));
+    const result = await SyncManager.sync(
+      notes,
+      tasks,
+      categories,
+      request.userId,
+    );
+    if (
+      result.notes.length === 0 &&
+      result.tasks.length === 0 &&
+      result.categories.length === 0
+    ) {
+      response.status(204).send();
+    } else {
+      response.status(200).send(result);
+    }
   } catch (error) {
     ApplicationError.errorHandler(error, response);
   }
