@@ -4,6 +4,7 @@ import { Note } from '../models/NoteModel';
 
 export const NoteSchema: Schema = new Schema(
   {
+    _id: { type: Types.ObjectId },
     title: String,
     text: String,
     createDate: Date,

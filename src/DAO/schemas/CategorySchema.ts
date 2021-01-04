@@ -4,6 +4,7 @@ import { Category } from '../models/CategoryModel';
 
 export const CategorySchema: Schema = new Schema(
   {
+    _id: { type: Types.ObjectId },
     text: { type: String, required: true },
     color: String,
     icon: String,

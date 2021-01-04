@@ -4,6 +4,7 @@ import { Task } from '../models/TaskModel';
 
 export const TaskSchema: Schema = new Schema(
   {
+    _id: { type: Types.ObjectId },
     title: { type: String, required: true },
     categoryId: { type: Types.ObjectId, ref: 'categories' },
     favorite: Boolean,
@@ -14,7 +15,6 @@ export const TaskSchema: Schema = new Schema(
     lastEditDate: Date,
     userId: { type: Types.ObjectId, ref: 'users', required: true },
   },
-
   { versionKey: false, collection: 'tasks' },
 );
 
