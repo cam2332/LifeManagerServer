@@ -5,16 +5,17 @@ import * as MongoConverter from '../service/MongoConverter';
 
 export const create = async (
   title: string,
-  startDate: Date,
-  endDate: Date,
-  categoryId: string,
-  note: string,
+  startDate: Date | undefined,
+  endDate: Date | undefined,
+  categoryId: string | undefined,
+  note: string | undefined,
   userId: string,
   favorite = false,
   done = false,
   lastEditDate = new Date(),
 ): Promise<TaskDocument> => {
   const taskData = MongoConverter.toTask(
+    undefined,
     title,
     startDate,
     endDate,
