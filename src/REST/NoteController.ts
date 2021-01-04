@@ -83,8 +83,12 @@ noteController.delete(
   Auth.auth,
   async (request: Request, response: Response) => {
     try {
-      if (Array.isArray(request.query.ids)) {
-        const ids: string[] = request.query.ids as string[];
+      let ids: string[] = [];
+      if (request.query.ids && request.query.ids !== '') {
+        const idString = request.query.ids as string;
+        ids = idString.split(',');
+      }
+      if (ids.length > 0) {
         await NoteManager.deleteByIds(ids);
         response.sendStatus(204);
       } else {
