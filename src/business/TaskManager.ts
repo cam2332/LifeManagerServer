@@ -33,14 +33,21 @@ export const getAll = async (userId: string): Promise<TaskDocument[]> => {
   let tasks: TaskDocument[] = [];
   try {
     tasks = await Task.getByUserId(userId);
-    if (!tasks) {
+    if (!tasks || tasks.length === 0) {
       throw new ApplicationError(
         'Tasks not found',
         ApplicationError.NOT_FOUND.code,
       );
     }
   } catch (error) {
-    return [];
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Tasks not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
   return tasks;
 };
@@ -52,14 +59,21 @@ export const getAllByTitle = async (
   let tasks: TaskDocument[] = [];
   try {
     tasks = await Task.getByUserIdAndTitle(userId, title);
-    if (!tasks) {
+    if (!tasks || tasks.length === 0) {
       throw new ApplicationError(
         'Tasks not found',
         ApplicationError.NOT_FOUND.code,
       );
     }
   } catch (error) {
-    return [];
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Tasks not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
 
   return tasks;
@@ -72,14 +86,21 @@ export const getAllByCategoryId = async (
   let tasks: TaskDocument[] = [];
   try {
     tasks = await Task.getByUserIdAndCategoryId(userId, categoryId);
-    if (!tasks) {
+    if (!tasks || tasks.length === 0) {
       throw new ApplicationError(
         'Tasks not found',
         ApplicationError.NOT_FOUND.code,
       );
     }
   } catch (error) {
-    return [];
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Tasks not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
 
   return tasks;
@@ -97,14 +118,21 @@ export const getAllByTitleAndCategoryId = async (
       title,
       categoryId,
     );
-    if (!tasks) {
+    if (!tasks || tasks.length === 0) {
       throw new ApplicationError(
         'Tasks not found',
         ApplicationError.NOT_FOUND.code,
       );
     }
   } catch (error) {
-    return [];
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Tasks not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
   return tasks;
 };

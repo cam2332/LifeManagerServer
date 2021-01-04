@@ -15,23 +15,47 @@ export const create = async (
 };
 
 export const getAll = async (userId: string): Promise<CategoryDocument[]> => {
-  const categories = await Category.getByUserId(userId);
-  if (!categories) {
-    throw new ApplicationError(
-      'Categories not found',
-      ApplicationError.NOT_FOUND.code,
-    );
+  let categories: CategoryDocument[] = [];
+  try {
+    categories = await Category.getByUserId(userId);
+    if (!categories) {
+      throw new ApplicationError(
+        'Categories not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
+  } catch (error) {
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Categories not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
   return categories;
 };
 
 export const getById = async (id: string): Promise<CategoryDocument> => {
-  const category = await Category.findById(id);
-  if (!category) {
-    throw new ApplicationError(
-      'Category not found',
-      ApplicationError.NOT_FOUND.code,
-    );
+  let category: CategoryDocument | null = null;
+  try {
+    category = await Category.findById(id);
+    if (!category) {
+      throw new ApplicationError(
+        'Category not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
+  } catch (error) {
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Category not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
   return category;
 };

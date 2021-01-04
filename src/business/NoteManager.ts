@@ -15,32 +15,52 @@ export const create = async (
 };
 
 export const getAll = async (userId: string): Promise<NoteDocument[]> => {
-  const notes = await Note.getByUserId(userId);
-  if (!notes) {
-    throw new ApplicationError(
-      'Notes not found',
-      ApplicationError.NOT_FOUND.code,
-    );
+  let notes: NoteDocument[] = [];
+  try {
+    notes = await Note.getByUserId(userId);
+    if (!notes || notes.length === 0) {
+      throw new ApplicationError(
+        'Notes not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
+  } catch (error) {
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Notes not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
-  return notes as NoteDocument[];
+  return notes;
 };
 
 export const getAllByTitleAndText = async (
   userId: string,
   searchText: string,
 ): Promise<NoteDocument[]> => {
-  const notes = await Note.getByUserIdTitleAndText(
-    userId,
-    searchText,
-    searchText,
-  );
-  if (!notes) {
-    throw new ApplicationError(
-      'Notes not found',
-      ApplicationError.NOT_FOUND.code,
-    );
+  let notes: NoteDocument[] = [];
+  try {
+    notes = await Note.getByUserIdTitleAndText(userId, searchText, searchText);
+    if (!notes || notes.length === 0) {
+      throw new ApplicationError(
+        'Notes not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
+  } catch (error) {
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Notes not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
-  return notes as NoteDocument[];
+  return notes;
 };
 
 export const deleteById = async (noteId: string): Promise<boolean> => {
