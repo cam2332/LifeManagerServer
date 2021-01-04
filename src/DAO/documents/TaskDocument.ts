@@ -8,6 +8,6 @@ export interface TaskDocument extends Document {
   note: string;
   startDate?: Date | undefined;
   endDate?: Date | undefined;
-  lastEditDate?: Date | undefined;
+  lastEditDate: Date;
   userId: Types.ObjectId;
 }
