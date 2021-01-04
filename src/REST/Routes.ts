@@ -3,6 +3,7 @@ import UserController from './UserController';
 import NoteController from './NoteController';
 import TaskController from './TaskController';
 import CategoryController from './CategoryController';
+import SyncController from './SyncController';
 
 const routes: Router = express.Router();
 routes.use(
@@ -29,6 +30,13 @@ routes.use(
   '/category',
   async (request: Request, response: Response, next: NextFunction) => {
     CategoryController(request, response, next);
+  },
+);
+
+routes.use(
+  '/sync',
+  async (request: Request, response: Response, next: NextFunction) => {
+    SyncController(request, response, next);
   },
 );
 
