@@ -1,0 +1,1797 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "LifeManager",
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "127.0.0.1:3000/api/v1"
+    }
+  ],
+  "paths": {
+    "/note/": {
+      "post": {
+        "description": "Create note",
+        "operationId": "createNote",
+        "tags": ["note"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/NoteCreationRequestBody"
+        },
+        "responses": {
+          "201": {
+            "description": "Creation successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      },
+      "get": {
+        "description": "Get all notes",
+        "operationId": "getAllNotes",
+        "tags": ["note"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200Notes"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NotesNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete notes from array of ids",
+        "operationId": "deleteNotesWithGivenArrayOdIds",
+        "tags": ["note"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "arrayOfIds",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Notes successfully deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NotesNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/note/search": {
+      "get": {
+        "description": "Get all notes by title and text or color",
+        "operationId": "getAllNotesByTitleAndTextOrColor",
+        "tags": ["note"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "values",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "searchText": {
+                  "type": "string"
+                },
+                "color": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "oneOf": [
+                {
+                  "required": ["searchText"]
+                },
+                {
+                  "required": ["color"]
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200Notes"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NotesNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/note/{id}": {
+      "delete": {
+        "description": "Delete note with given id",
+        "operationId": "deleteNoteWithGivenId",
+        "tags": ["note"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{noteId}}"
+            },
+            "description": "Note Id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Note successfully deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NoteNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/note/{id}/title/{title}": {
+      "patch": {
+        "description": "Change note title",
+        "operationId": "changeNoteTitle",
+        "tags": ["note"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{noteId}}"
+            },
+            "description": "Note Id"
+          },
+          {
+            "in": "path",
+            "name": "title",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New note title"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Note title successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NoteNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/note/{id}/text/{text}": {
+      "patch": {
+        "description": "Change note text",
+        "operationId": "changeNoteText",
+        "tags": ["note"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{noteId}}"
+            },
+            "description": "Note Id"
+          },
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Note text"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Note text successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NoteNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/note/{id}/color/{color}": {
+      "patch": {
+        "description": "Change note color",
+        "operationId": "changeNoteColor",
+        "tags": ["note"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{noteId}}"
+            },
+            "description": "Note Id"
+          },
+          {
+            "in": "path",
+            "name": "color",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "#0788D9"
+            },
+            "description": "New note color"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Note color successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NoteNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "summary": "Register user",
+        "operationId": "registerUser",
+        "tags": ["user"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegisterCredentials"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registration was successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Registration failed (User with that email or login already exist)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "summary": "Login user",
+        "operationId": "loginUser",
+        "tags": ["user"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": ["login", "password", "deviceName"],
+                    "properties": {
+                      "login": {
+                        "type": "string",
+                        "example": "{{login}}"
+                      },
+                      "password": {
+                        "type": "string",
+                        "example": "{{password}}"
+                      },
+                      "deviceName": {
+                        "type": "string",
+                        "example": "{{deviceName}}"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": ["email", "password", "deviceName"],
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "example": "{{email}}"
+                      },
+                      "password": {
+                        "type": "string",
+                        "example": "{{password}}"
+                      },
+                      "deviceName": {
+                        "type": "string",
+                        "example": "{{deviceName}}"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logged in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["token"],
+                  "properties": {
+                    "token": {
+                      "$ref": "#/components/schemas/Token"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "delete": {
+        "summary": "Logout user",
+        "operationId": "logoutUser",
+        "tags": ["user"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          },
+          "404": {
+            "description": "Logout failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}/display-name/{displayName}": {
+      "patch": {
+        "summary": "Update user display name",
+        "operationId": "updateUserDisplayName",
+        "tags": ["user"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{userId}}"
+            },
+            "description": "User Id"
+          },
+          {
+            "in": "path",
+            "name": "displayName",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New user display name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User display name successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404UserNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/user/{id}/profile-image-url/{imageUrl}": {
+      "patch": {
+        "summary": "Update user profile image",
+        "operationId": "updateUserProfileImage",
+        "tags": ["user"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{userId}}"
+            },
+            "description": "User Id"
+          },
+          {
+            "in": "path",
+            "name": "imageUrl",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New user profile image"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User profile image successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404UserNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/user/{id}/password/{password}": {
+      "patch": {
+        "summary": "Update user password",
+        "operationId": "updateUserPassword",
+        "tags": ["user"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{userId}}"
+            },
+            "description": "User Id"
+          },
+          {
+            "in": "path",
+            "name": "password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New user password"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User password successfully changed"
+          },
+          "409": {
+            "$ref": "#/components/responses/409PasswordIsTheSame"
+          },
+          "404": {
+            "$ref": "#/components/responses/404UserNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/": {
+      "post": {
+        "description": "Create task",
+        "operationId": "createTask",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/TaskCreationRequestBody"
+        },
+        "responses": {
+          "201": {
+            "description": "Creation successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      },
+      "get": {
+        "description": "Get all tasks",
+        "operationId": "getAllTasks",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200Tasks"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TasksNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete tasks from array of ids",
+        "operationId": "deleteTasksWithGivenArrayOdIds",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ids",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tasks successfully deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TasksNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/{id}": {
+      "delete": {
+        "description": "Delete task with given id",
+        "operationId": "deleteTaskWithGivenId",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{taskId}}"
+            },
+            "description": "Task Id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task successfully deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TaskNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/{id}/title/{title}": {
+      "patch": {
+        "description": "Change task title",
+        "operationId": "changeTaskTitle",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{taskId}}"
+            },
+            "description": "Task Id"
+          },
+          {
+            "in": "path",
+            "name": "title",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New task title"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task title successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TaskNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/{id}/start-date/{startDate}": {
+      "patch": {
+        "description": "Change task start date",
+        "operationId": "changeTaskStartDate",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{taskId}}"
+            },
+            "description": "Task Id"
+          },
+          {
+            "in": "path",
+            "name": "startDate",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "New task date"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task start date successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TaskNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/{id}/end-date/{endDate}": {
+      "patch": {
+        "description": "Change task end date",
+        "operationId": "changeTaskEndDate",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{taskId}}"
+            },
+            "description": "Task Id"
+          },
+          {
+            "in": "path",
+            "name": "endDate",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "New task date"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task end date successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TaskNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/{id}/category-id/{categoryId}": {
+      "patch": {
+        "description": "Change task categoryId",
+        "operationId": "changeTaskCategoryId",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{taskId}}"
+            },
+            "description": "Task Id"
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New task categoryId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task categoryId successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TaskNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/{id}/note/{note}": {
+      "patch": {
+        "description": "Change task note",
+        "operationId": "changeTaskNote",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{taskId}}"
+            },
+            "description": "Task Id"
+          },
+          {
+            "in": "path",
+            "name": "note",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New task note"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task note successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TaskNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/{id}/favorite/{favorite}": {
+      "patch": {
+        "description": "Change task is favorite",
+        "operationId": "changeTaskIsFavorite",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{taskId}}"
+            },
+            "description": "Task Id"
+          },
+          {
+            "in": "path",
+            "name": "favorite",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New task favorite value"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task is favorite successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TaskNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/{id}/done/{done}": {
+      "patch": {
+        "description": "Change task is done",
+        "operationId": "changeTaskIsDone",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{taskId}}"
+            },
+            "description": "Task Id"
+          },
+          {
+            "in": "path",
+            "name": "done",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "New task done value"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task is done successfully changed"
+          },
+          "404": {
+            "$ref": "#/components/responses/404TaskNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/task/search": {
+      "get": {
+        "description": "Get all tasks by title or categoryId",
+        "operationId": "getAllTasksByTitleOrCategoryId",
+        "tags": ["task"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "values",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "searchText": {
+                  "type": "string"
+                },
+                "categoryId": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "oneOf": [
+                {
+                  "required": ["searchText"]
+                },
+                {
+                  "required": ["categoryId"]
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200Notes"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NotesNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/category/": {
+      "get": {
+        "description": "Get all categories",
+        "operationId": "getAllCategories",
+        "tags": ["category"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200Categories"
+          },
+          "404": {
+            "$ref": "#/components/responses/404CategoriesNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      },
+      "post": {
+        "description": "Create new category",
+        "operationId": "createNewCategory",
+        "tags": ["category"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CategoryCreationRequestBody"
+        },
+        "responses": {
+          "201": {
+            "description": "Creation successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/category/{id}": {
+      "get": {
+        "description": "Get category by id",
+        "operationId": "getCategoryById",
+        "tags": ["category"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{categoryId}}"
+            },
+            "description": "Category Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200Category"
+          },
+          "404": {
+            "$ref": "#/components/responses/404CategoryNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete category with given id",
+        "operationId": "deleteCategoryWithGivenId",
+        "tags": ["category"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{categoryId}}"
+            },
+            "description": "Category Id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Category successfully deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/404CategoryNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    },
+    "/sync/": {
+      "post": {
+        "description": "Send notes, tasks and categories to the server for synchronization",
+        "operationId": "sendSyncData",
+        "tags": ["sync"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SyncDataRequestBody"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200SyncData"
+          },
+          "204": {
+            "$ref": "#/components/responses/204SyncData"
+          },
+          "400": {
+            "$ref": "#/components/responses/400InvalidToken"
+          },
+          "401": {
+            "$ref": "#/components/responses/401NoToken"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "TokenHeader": {
+        "in": "header",
+        "name": "token",
+        "schema": {
+          "type": "string",
+          "format": "base64"
+        },
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "required": true
+      }
+    },
+    "requestBodies": {
+      "NoteCreationRequestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "Test note title"
+                },
+                "text": {
+                  "type": "string",
+                  "example": "Test note text"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TaskCreationRequestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "Test task title"
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "categoryId": {
+                  "type": "string",
+                  "example": "5f9a9e21ff17dd2636251c8b"
+                },
+                "note": {
+                  "type": "string",
+                  "example": "Test note"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CategoryCreationRequestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "example": "Test text"
+                },
+                "color": {
+                  "type": "string",
+                  "example": "#fff"
+                },
+                "icon": {
+                  "type": "string",
+                  "example": "star-sharp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SyncDataRequestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SyncData"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "404UserNotFound": {
+        "description": "User not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "409PasswordIsTheSame": {
+        "description": "Passwords are the same",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "200Notes": {
+        "description": "List of notes",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notes"
+            }
+          }
+        }
+      },
+      "404NoteNotFound": {
+        "description": "Note not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404NotesNotFound": {
+        "description": "Notes not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "200Task": {
+        "description": "Task",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        }
+      },
+      "200Tasks": {
+        "description": "List of tasks",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Tasks"
+            }
+          }
+        }
+      },
+      "404TaskNotFound": {
+        "description": "Task not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404TasksNotFound": {
+        "description": "Tasks not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "200Category": {
+        "description": "Category",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Category"
+            }
+          }
+        }
+      },
+      "200Categories": {
+        "description": "List of categories",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Categories"
+            }
+          }
+        }
+      },
+      "404CategoryNotFound": {
+        "description": "Category not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404CategoriesNotFound": {
+        "description": "Categories not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "200SyncData": {
+        "description": "Elements to update on client",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SyncData"
+            }
+          }
+        }
+      },
+      "204SyncData": {
+        "description": "No data needed to update on client"
+      },
+      "400InvalidToken": {
+        "description": "Invalid token.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401NoToken": {
+        "description": "Access denied. No token provided.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": ["message"],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "additionalInfo": {
+            "type": "string"
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "required": ["token"],
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "{{authToken}}"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": ["id", "login", "email"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "{{userId}}"
+          },
+          "login": {
+            "type": "string",
+            "example": "{{login}}"
+          },
+          "email": {
+            "type": "string",
+            "example": "{{email}}"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "{{displayName}}"
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "example": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+          }
+        }
+      },
+      "UserRegisterCredentials": {
+        "type": "object",
+        "required": ["login", "email", "password"],
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "{{login}}"
+          },
+          "email": {
+            "type": "string",
+            "example": "{{email}}"
+          },
+          "password": {
+            "type": "string",
+            "example": "{{password}}"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "{{displayName}}"
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "example": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+          }
+        }
+      },
+      "UserLoginCredentials": {
+        "type": "object",
+        "required": ["password"],
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "{{login}}"
+          },
+          "email": {
+            "type": "string",
+            "example": "{{email}}"
+          },
+          "password": {
+            "type": "string",
+            "example": "{{password}}"
+          }
+        }
+      },
+      "Note": {
+        "type": "object",
+        "required": ["id", "title", "createDate", "lastEditDate"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "createDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastEditDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Notes": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Note"
+        }
+      },
+      "Task": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "startDate",
+          "endDate",
+          "categoryId",
+          "note"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "categoryId": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean"
+          },
+          "favorite": {
+            "type": "boolean"
+          },
+          "lastEditDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Tasks": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Task"
+        }
+      },
+      "Category": {
+        "type": "object",
+        "required": ["id", "text", "color"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          }
+        }
+      },
+      "Categories": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Category"
+        }
+      },
+      "SyncData": {
+        "type": "object",
+        "properties": {
+          "notes": {
+            "$ref": "#/components/schemas/Notes"
+          },
+          "tasks": {
+            "$ref": "#/components/schemas/Tasks"
+          },
+          "categories": {
+            "$ref": "#/components/schemas/Categories"
+          }
+        }
+      }
+    }
+  }
+}
