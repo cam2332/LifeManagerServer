@@ -65,6 +65,11 @@ taskController.get(
           request.userId,
           categoryId.toString(),
         );
+      } else if (!searchText && !categoryId) {
+        throw new ApplicationError(
+          'Tasks not found',
+          ApplicationError.NOT_FOUND.code,
+        );
       }
       response.status(200).send(MongoConverter.fromTaskArray(result));
     } catch (error) {
@@ -147,7 +152,7 @@ taskController.patch(
     try {
       await TaskManager.updateEndDate(
         request.params.id,
-        request.params.startDate,
+        request.params.endDate,
       );
       response.sendStatus(204);
     } catch (error) {

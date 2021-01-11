@@ -3,7 +3,6 @@ import * as CategoryManager from '../business/CategoryManager';
 import * as MongoConverter from '../service/MongoConverter';
 import * as Auth from '../middleware/Auth';
 import ApplicationError from '../service/ApplicationError';
-import { CategoryDocument } from '../DAO/documents/CategoryDocument';
 
 const categoryController: Router = express.Router();
 
@@ -52,7 +51,7 @@ categoryController.get(
 );
 
 categoryController.delete(
-  ':id',
+  '/:id',
   Auth.auth,
   async (request: Request, response: Response) => {
     try {
