@@ -19,13 +19,6 @@ TokenSchema.statics.createToken = async (
   return await new Token(token).save();
 };
 
-TokenSchema.statics.getByValue = async (
-  tokenValue: string,
-): Promise<TokenDocument | null> => {
-  const result = await Token.findOne({ value: tokenValue });
-  return result;
-};
-
 TokenSchema.statics.removeTokens = async (
   userId: string,
   deviceName: string,

@@ -49,13 +49,16 @@ NoteSchema.statics.updateTitle = async (
   title: string,
 ): Promise<NoteDocument | null> => {
   try {
-    const updatedNote = await Note.findByIdAndUpdate(id, {
-      title: title,
-      lastEditDate: new Date(),
-    });
+    const updatedNote = await Note.findByIdAndUpdate(
+      id,
+      {
+        title: title,
+        lastEditDate: new Date(),
+      },
+      { new: true },
+    );
     return updatedNote;
   } catch (error) {
-    console.error('error updating title');
     return null;
   }
 };
@@ -65,13 +68,16 @@ NoteSchema.statics.updateText = async (
   text: string,
 ): Promise<NoteDocument | null> => {
   try {
-    const updatedNote = await Note.findByIdAndUpdate(id, {
-      text: text,
-      lastEditDate: new Date(),
-    });
+    const updatedNote = await Note.findByIdAndUpdate(
+      id,
+      {
+        text: text,
+        lastEditDate: new Date(),
+      },
+      { new: true },
+    );
     return updatedNote;
   } catch (error) {
-    console.error('error updating text');
     return null;
   }
 };
@@ -81,13 +87,16 @@ NoteSchema.statics.updateColor = async (
   color: string,
 ): Promise<NoteDocument | null> => {
   try {
-    const updatedNote = await Note.findByIdAndUpdate(id, {
-      color: color,
-      lastEditDate: new Date(),
-    });
+    const updatedNote = await Note.findByIdAndUpdate(
+      id,
+      {
+        color: color,
+        lastEditDate: new Date(),
+      },
+      { new: true },
+    );
     return updatedNote;
   } catch (error) {
-    console.error('error updating color');
     return null;
   }
 };

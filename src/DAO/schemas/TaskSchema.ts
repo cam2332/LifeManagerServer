@@ -110,7 +110,6 @@ TaskSchema.statics.updateTitle = async (
     );
     return updatedTask;
   } catch (error) {
-    console.error('error updating task title', error);
     return null;
   }
 };
@@ -130,7 +129,6 @@ TaskSchema.statics.updateStartDate = async (
     );
     return updatedTask;
   } catch (error) {
-    console.error('error updating task start date', error);
     return null;
   }
 };
@@ -150,7 +148,6 @@ TaskSchema.statics.updateEndDate = async (
     );
     return updatedTask;
   } catch (error) {
-    console.error('error updating task end date', error);
     return null;
   }
 };
@@ -170,7 +167,6 @@ TaskSchema.statics.updateCategoryId = async (
     );
     return updatedTask;
   } catch (error) {
-    console.error('error updating task category id', error);
     return null;
   }
 };
@@ -190,7 +186,6 @@ TaskSchema.statics.updateNote = async (
     );
     return updatedTask;
   } catch (error) {
-    console.error('error updating task note', error);
     return null;
   }
 };
@@ -210,7 +205,6 @@ TaskSchema.statics.updateFavorite = async (
     );
     return updatedTask;
   } catch (error) {
-    console.error('error updating task favorite', error);
     return null;
   }
 };
@@ -230,7 +224,6 @@ TaskSchema.statics.updateDone = async (
     );
     return updatedTask;
   } catch (error) {
-    console.error('error updating task done', error);
     return null;
   }
 };
