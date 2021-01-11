@@ -4,7 +4,6 @@ import { TokenDocument } from '../documents/TokenDocument';
 
 export interface TokenModel extends Model<TokenDocument> {
   createToken(token: TokenDocument): Promise<TokenDocument>;
-  getByValue(tokenValue: string): Promise<TokenDocument>;
   removeTokens(
     userId: string,
     deviceName: string,
