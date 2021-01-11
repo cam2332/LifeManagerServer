@@ -25,20 +25,20 @@ export const fromUser = (
 export const toNote = (
   id: string | undefined,
   title: string,
-  text: string,
+  text = '',
   userId: string,
   color = '',
   createDate: Date = new Date(),
   lastEditDate: Date = new Date(),
 ): NoteDocument => {
   return {
-    ...(id && { _id: Types.ObjectId(id) }),
-    title: title,
-    text: text,
+    ...(id ? { _id: Types.ObjectId(id) } : { _id: Types.ObjectId() }),
+    title,
+    text,
     createDate: new Date(createDate),
     lastEditDate: new Date(lastEditDate),
     userId: Types.ObjectId(userId),
-    color: color,
+    color,
   } as NoteDocument;
 };
 
@@ -105,7 +105,7 @@ export const toTask = (
   lastEditDate = new Date(),
 ): TaskDocument => {
   return {
-    ...(id && { _id: Types.ObjectId(id) }),
+    ...(id ? { _id: Types.ObjectId(id) } : { _id: Types.ObjectId() }),
     title,
     startDate,
     endDate,
@@ -188,7 +188,7 @@ export const toCategory = (
   icon = '',
 ): CategoryDocument => {
   return {
-    ...(id && { _id: Types.ObjectId(id) }),
+    ...(id ? { _id: Types.ObjectId(id) } : { _id: Types.ObjectId() }),
     text,
     userId: Types.ObjectId(userId),
     color,
