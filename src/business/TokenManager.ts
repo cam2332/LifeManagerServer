@@ -43,10 +43,14 @@ export const remove = async (
   userId: string,
   deviceName: string,
 ): Promise<boolean> => {
-  const result = await Token.removeTokens(userId, deviceName);
-  if (result.n && result.ok && result.deletedCount === 1) {
-    return true;
-  } else {
+  try {
+    const result = await Token.removeTokens(userId, deviceName);
+    if (result.n && result.ok && result.deletedCount) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
     return false;
   }
 };

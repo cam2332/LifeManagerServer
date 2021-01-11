@@ -8,19 +8,57 @@ import { Category } from '../DAO/models/CategoryModel';
 import * as NoteManager from './NoteManager';
 import * as TaskManager from './TaskManager';
 import * as CategoryManager from './CategoryManager';
+import * as MongoConverter from '../service/MongoConverter';
+
 export const sync = async (
-  notes: NoteDocument[],
-  tasks: TaskDocument[],
-  categories: CategoryDocument[],
+  rawNotes: any,
+  rawTasks: any,
+  rawCategories: any,
   userId: string,
 ): Promise<{
-  notes: NoteDocument[];
-  tasks: TaskDocument[];
-  categories: CategoryDocument[];
+  notes: {
+    id: string;
+    title: string;
+    text: string;
+    createDate: Date;
+    lastEditDate: Date;
+    color: string;
+  }[];
+  tasks: {
+    id: string;
+    title: string;
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+    categoryId: string | undefined;
+    favorite: boolean;
+    done: boolean;
+    note: string;
+    lastEditDate: Date;
+  }[];
+  categories: {
+    id: string;
+    text: string;
+    color?: string;
+    icon?: string;
+  }[];
 }> => {
+  const notes: NoteDocument[] = MongoConverter.toNoteArray(rawNotes, userId);
+  const tasks: TaskDocument[] = MongoConverter.toTaskArray(rawTasks, userId);
+  const categories: CategoryDocument[] = MongoConverter.toCategoryArray(
+    rawCategories,
+    userId,
+  );
   let remoteNotes: NoteDocument[] = [];
   let remoteTasks: TaskDocument[] = [];
   let remoteCategories: CategoryDocument[] = [];
+
+  const returnNotes: NoteDocument[] = [];
+  const returnTasks: TaskDocument[] = [];
+  const returnCategories: CategoryDocument[] = [];
+
+  const dbNotes: NoteDocument[] = [];
+  const dbTasks: TaskDocument[] = [];
+  const dbCategories: CategoryDocument[] = [];
   try {
     remoteNotes = await NoteManager.getAll(userId);
   } catch (error) {
@@ -36,14 +74,6 @@ export const sync = async (
   } catch (error) {
     remoteCategories = [];
   }
-
-  const returnNotes: NoteDocument[] = [];
-  const returnTasks: TaskDocument[] = [];
-  let returnCategories: CategoryDocument[] = [];
-
-  const dbNotes: NoteDocument[] = [];
-  const dbTasks: TaskDocument[] = [];
-  const dbCategories: CategoryDocument[] = [];
 
   if (remoteNotes.length > 0) {
     for (let i = notes.length - 1; i >= 0; --i) {
@@ -67,6 +97,7 @@ export const sync = async (
       }
       notes.splice(i, 1);
     }
+    returnNotes.push(...remoteNotes);
   } else {
     dbNotes.push(...notes);
   }
@@ -96,6 +127,7 @@ export const sync = async (
         tasks.splice(i, 1);
       }
     }
+    returnTasks.push(...remoteTasks);
   } else {
     dbTasks.push(...tasks);
   }
@@ -115,7 +147,7 @@ export const sync = async (
   } else {
     dbCategories.push(...categories);
   }
-  returnCategories = remoteCategories;
+  returnCategories.push(...remoteCategories);
 
   dbNotes.map((dbNote) => {
     dbNote.userId = Types.ObjectId(userId);
@@ -129,6 +161,7 @@ export const sync = async (
     dbCategory.userId = Types.ObjectId(userId);
     return dbCategory;
   });
+
   try {
     Note.bulkWrite(
       dbNotes.map((note) => ({
@@ -162,8 +195,8 @@ export const sync = async (
   }
 
   return {
-    notes: returnNotes,
-    tasks: returnTasks,
-    categories: returnCategories,
+    notes: MongoConverter.fromNoteArray(returnNotes),
+    tasks: MongoConverter.fromTaskArray(returnTasks),
+    categories: MongoConverter.fromCategoryArray(returnCategories),
   };
 };

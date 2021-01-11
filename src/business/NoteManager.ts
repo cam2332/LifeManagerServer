@@ -5,11 +5,21 @@ import * as MongoConverter from '../service/MongoConverter';
 
 export const create = async (
   title: string,
-  text: string,
-  color: string,
+  text: string | undefined,
+  color: string | undefined,
   userId: string,
+  createDate = new Date(),
+  lastEditDate = new Date(),
 ): Promise<NoteDocument> => {
-  const noteData = MongoConverter.toNote(title, text, userId, color);
+  const noteData = MongoConverter.toNote(
+    undefined,
+    title,
+    text,
+    userId,
+    color,
+    createDate,
+    lastEditDate,
+  );
   const createdNote = await Note.createNote(noteData);
   return createdNote;
 };
@@ -64,12 +74,17 @@ export const getAllByTitleAndText = async (
 };
 
 export const deleteById = async (noteId: string): Promise<boolean> => {
-  const deletedNote = await Note.findByIdAndDelete(noteId);
-  if (!deletedNote) {
-    throw new ApplicationError(
-      'Note not found',
-      ApplicationError.NOT_FOUND.code,
-    );
+  try {
+    await Note.findByIdAndDelete(noteId);
+  } catch (error) {
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Note not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
   return true;
 };
@@ -88,7 +103,7 @@ export const deleteByIds = async (notesIds: string[]): Promise<boolean> => {
 export const updateTitle = async (
   noteId: string,
   title: string,
-): Promise<boolean> => {
+): Promise<NoteDocument> => {
   const updatedNote = await Note.updateTitle(noteId, title);
   if (!updatedNote) {
     throw new ApplicationError(
@@ -96,13 +111,13 @@ export const updateTitle = async (
       ApplicationError.NOT_FOUND.code,
     );
   }
-  return true;
+  return updatedNote;
 };
 
 export const updateText = async (
   noteId: string,
   text: string,
-): Promise<boolean> => {
+): Promise<NoteDocument> => {
   const updatedNote = await Note.updateText(noteId, text);
   if (!updatedNote) {
     throw new ApplicationError(
@@ -110,13 +125,13 @@ export const updateText = async (
       ApplicationError.NOT_FOUND.code,
     );
   }
-  return true;
+  return updatedNote;
 };
 
 export const updateColor = async (
   noteId: string,
   color: string,
-): Promise<boolean> => {
+): Promise<NoteDocument> => {
   const updatedNote = await Note.updateColor(noteId, color);
   if (!updatedNote) {
     throw new ApplicationError(
@@ -124,5 +139,5 @@ export const updateColor = async (
       ApplicationError.NOT_FOUND.code,
     );
   }
-  return true;
+  return updatedNote;
 };

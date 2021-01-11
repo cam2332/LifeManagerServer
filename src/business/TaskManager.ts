@@ -157,7 +157,7 @@ export const updateStartDate = async (
   startDate: string,
 ): Promise<TaskDocument> => {
   const date = Date.parse(startDate);
-  if (date === NaN) {
+  if (isNaN(date)) {
     throw new ApplicationError(
       'Invalid date format',
       ApplicationError.BAD_REQUEST.code,
@@ -178,7 +178,7 @@ export const updateEndDate = async (
   endDate: string,
 ): Promise<TaskDocument> => {
   const date = Date.parse(endDate);
-  if (date === NaN) {
+  if (isNaN(date)) {
     throw new ApplicationError(
       'Invalid date format',
       ApplicationError.BAD_REQUEST.code,
@@ -251,12 +251,17 @@ export const updateDone = async (
 };
 
 export const deleteById = async (taskId: string): Promise<boolean> => {
-  const deletedTask = await Task.findByIdAndDelete(taskId);
-  if (!deletedTask) {
-    throw new ApplicationError(
-      'Task not found',
-      ApplicationError.NOT_FOUND.code,
-    );
+  try {
+    await Task.findByIdAndDelete(taskId);
+  } catch (error) {
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Task not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
   return true;
 };

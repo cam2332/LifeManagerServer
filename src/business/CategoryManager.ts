@@ -9,7 +9,13 @@ export const create = async (
   color = '',
   icon = '',
 ): Promise<CategoryDocument> => {
-  const categoryData = MongoConverter.toCategory(text, userId, color, icon);
+  const categoryData = MongoConverter.toCategory(
+    undefined,
+    text,
+    userId,
+    color,
+    icon,
+  );
   const createdCategory = await Category.createCategory(categoryData);
   return createdCategory;
 };
@@ -18,7 +24,7 @@ export const getAll = async (userId: string): Promise<CategoryDocument[]> => {
   let categories: CategoryDocument[] = [];
   try {
     categories = await Category.getByUserId(userId);
-    if (!categories) {
+    if (!categories || categories.length === 0) {
       throw new ApplicationError(
         'Categories not found',
         ApplicationError.NOT_FOUND.code,
@@ -61,12 +67,17 @@ export const getById = async (id: string): Promise<CategoryDocument> => {
 };
 
 export const deleteById = async (id: string): Promise<boolean> => {
-  const deletedCategory = await Category.findByIdAndDelete(id);
-  if (!deletedCategory) {
-    throw new ApplicationError(
-      'Category not found',
-      ApplicationError.NOT_FOUND.code,
-    );
+  try {
+    await Category.findByIdAndDelete(id);
+  } catch (error) {
+    if (error instanceof ApplicationError) {
+      throw error;
+    } else {
+      throw new ApplicationError(
+        'Category not found',
+        ApplicationError.NOT_FOUND.code,
+      );
+    }
   }
   return true;
 };
