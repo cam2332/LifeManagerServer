@@ -10,7 +10,7 @@
     "coverage": "nyc npm run test"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.21.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.13.20"
   },
